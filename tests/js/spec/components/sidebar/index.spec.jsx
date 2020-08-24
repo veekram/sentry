@@ -66,7 +66,7 @@ describe('Sidebar', function () {
     expect(wrapper.find('UserNameOrEmail').text()).toContain(user.email);
 
     wrapper.find('SidebarDropdownActor').simulate('click');
-    expect(wrapper.find('OrgAndUserMenu')).toSnapshot();
+    expect(wrapper).toSnapshot();
   });
 
   it('can toggle collapsed state', async function () {
@@ -152,7 +152,7 @@ describe('Sidebar', function () {
       wrapper.find('HelpActor').simulate('click');
       const menu = wrapper.find('HelpMenu');
       expect(menu).toHaveLength(1);
-      expect(menu).toSnapshot();
+      expect(wrapper).toSnapshot();
       expect(menu.find('SidebarMenuItem')).toHaveLength(4);
       wrapper.find('HelpActor').simulate('click');
       expect(wrapper.find('HelpMenu')).toHaveLength(0);
@@ -164,7 +164,7 @@ describe('Sidebar', function () {
       wrapper = createWrapper();
       wrapper.find('SidebarDropdownActor').simulate('click');
       expect(wrapper.find('OrgAndUserMenu')).toHaveLength(1);
-      expect(wrapper.find('OrgAndUserMenu')).toSnapshot();
+      expect(wrapper).toSnapshot();
     });
 
     it('has link to Members settings with `member:write`', function () {
@@ -193,7 +193,7 @@ describe('Sidebar', function () {
       jest.advanceTimersByTime(500);
       wrapper.update();
       expect(wrapper.find('SwitchOrganizationMenu')).toHaveLength(1);
-      expect(wrapper.find('SwitchOrganizationMenu')).toSnapshot();
+      expect(wrapper).toSnapshot();
       jest.useRealTimers();
     });
 
