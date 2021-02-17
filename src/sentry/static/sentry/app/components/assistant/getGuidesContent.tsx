@@ -159,5 +159,26 @@ export default function getGuidesContent(): GuidesContent {
         },
       ],
     },
+    {
+      guide: 'assigned_or_suggested_guide',
+      requiredTargets: ['assigned_or_suggested_query'],
+      steps: [
+        {
+          target: 'assigned_or_suggested_query',
+          description: tct(
+            "Tip: use [assignedOrSuggested] to include issues based on your [ownership:ownership rules] and [committed:code you've committed].",
+            {
+              assignedOrSuggested: <code>assigned_or_suggested</code>,
+              ownership: (
+                <ExternalLink href="https://docs.sentry.io/product/error-monitoring/issue-owners/" />
+              ),
+              committed: (
+                <ExternalLink href="https://docs.sentry.io/product/sentry-basics/guides/integrate-frontend/configure-scms/" />
+              ),
+            }
+          ),
+        },
+      ],
+    },
   ];
 }

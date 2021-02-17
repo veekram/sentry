@@ -20,4 +20,5 @@ GUIDES = {
     "issue_stream": {"id": 3, "required_targets": ["issue_stream"]},
     "inbox_guide": {"id": 8, "required_targets": ["inbox_guide"]},
     "for_review_guide": {"id": 9, "required_targets": ["for_review_guide_tab"]},
+    "assigned_or_suggested_guide": {"id": 10, "required_targets": ["assigned_or_suggested_query"]},
 }
