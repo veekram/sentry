@@ -1,4 +1,4 @@
-# Port of https://github.com/samuelmeuli/anonymize-ip to Python 2
+# Port of https://github.com/samuelmeuli/anonymize-ip
 """
 MIT License
 

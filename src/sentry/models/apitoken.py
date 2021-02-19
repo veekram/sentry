@@ -1,4 +1,4 @@
-from django.utils.encoding import force_text, python_2_unicode_compatible
+from django.utils.encoding import force_text
 from datetime import timedelta
 from django.db import models, transaction
 from django.utils import timezone
@@ -18,7 +18,6 @@ def generate_token():
     return uuid4().hex + uuid4().hex
 
 
-@python_2_unicode_compatible
 class ApiToken(Model, HasApiScopes):
     __core__ = True
 
