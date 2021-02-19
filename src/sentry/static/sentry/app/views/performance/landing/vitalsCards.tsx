@@ -273,7 +273,6 @@ type VitalBarProps = {
   showBar?: boolean;
   showStates?: boolean;
   showDurationDetail?: boolean;
-  showVitalPercentNames?: boolean;
 };
 
 export function VitalBar(props: VitalBarProps) {
@@ -285,7 +284,6 @@ export function VitalBar(props: VitalBarProps) {
     showBar = true,
     showStates = false,
     showDurationDetail = false,
-    showVitalPercentNames = false,
   } = props;
 
   if (isLoading) {
@@ -332,11 +330,7 @@ export function VitalBar(props: VitalBarProps) {
             <strong>{p75}</strong>
           </div>
         )}
-        <VitalPercents
-          vital={vital}
-          percents={percents}
-          showVitalPercentNames={showVitalPercentNames}
-        />
+        <VitalPercents vital={vital} percents={percents} />
       </BarDetail>
     </React.Fragment>
   );

@@ -130,7 +130,6 @@ function UserStats({eventView, totals, location, organization, transactionName}:
                   organization={organization}
                   location={location}
                   vital={[WebVital.FCP, WebVital.LCP, WebVital.FID, WebVital.CLS]}
-                  hideVitalPercentNames
                   hideDurationDetail
                 />
               </SidebarWrapper>

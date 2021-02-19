@@ -15,7 +15,6 @@ type Props = {
   vital: WebVital | WebVital[];
   hideBar?: boolean;
   hideStates?: boolean;
-  hideVitalPercentNames?: boolean;
   hideDurationDetail?: boolean;
 };
 
@@ -27,7 +26,6 @@ export default function vitalInfo(props: Props) {
     location,
     hideBar,
     hideStates,
-    hideVitalPercentNames,
     hideDurationDetail,
   } = props;
   return (
@@ -44,7 +42,6 @@ export default function vitalInfo(props: Props) {
           vital={vital}
           showBar={!hideBar}
           showStates={!hideStates}
-          showVitalPercentNames={!hideVitalPercentNames}
           showDurationDetail={!hideDurationDetail}
         />
       )}

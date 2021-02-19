@@ -325,7 +325,6 @@ class VitalCard extends React.Component<Props, State> {
                   vital={vital}
                   showBar={false}
                   showStates={false}
-                  showVitalPercentNames={false}
                   showDurationDetail={false}
                 />
               </PercentContainer>

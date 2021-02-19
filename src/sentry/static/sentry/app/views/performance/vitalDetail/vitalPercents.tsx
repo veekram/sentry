@@ -17,7 +17,6 @@ type Percent = {
 type Props = {
   vital: WebVital | WebVital[];
   percents: Percent[];
-  showVitalPercentNames?: boolean;
 };
 
 function getVitalStateText(vital, vitalState) {
@@ -50,10 +49,7 @@ export default function VitalPercents(props: Props) {
           >
             <VitalStatus>
               {vitalStateIcons[pct.vitalState]}
-              <span>
-                {props.showVitalPercentNames && t(`${pct.vitalState}`)}{' '}
-                {formatPercentage(pct.percent, 0)}
-              </span>
+              <span>{formatPercentage(pct.percent, 0)}</span>
             </VitalStatus>
           </Tooltip>
         );
