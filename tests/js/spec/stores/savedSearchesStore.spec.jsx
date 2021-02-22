@@ -76,10 +76,11 @@ describe('SavedSearchesStore', function () {
         id: '123',
         query: 'level:info',
         isPinned: true,
+        sort: 'date',
       },
     });
 
-    pinSearch(api, 'org-1', 0, 'level:info');
+    pinSearch(api, 'org-1', 0, 'level:info', 'date');
     await tick();
     await tick();
 
@@ -91,6 +92,7 @@ describe('SavedSearchesStore', function () {
         type: 0,
         query: 'level:info',
         name: 'My Pinned Search',
+        sort: 'date',
       })
     );
   });
@@ -123,13 +125,14 @@ describe('SavedSearchesStore', function () {
         query: 'is:unresolved',
         name: 'Unresolved Issues',
         type: 0,
+        sort: 'date',
       },
     });
 
     await fetchSavedSearches(api, 'org-1', {});
     await tick();
 
-    pinSearch(api, 'org-1', 0, searches[1].query);
+    pinSearch(api, 'org-1', 0, searches[1].query, 'date');
     await tick();
     await tick();
 
@@ -144,6 +147,7 @@ describe('SavedSearchesStore', function () {
         type: 0,
         name: 'Unresolved Issues',
         query: 'is:unresolved',
+        sort: 'date',
       })
     );
 

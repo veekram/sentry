@@ -2,7 +2,7 @@ from django.utils import timezone
 from exam import fixture
 
 from sentry.api.endpoints.organization_pinned_searches import PINNED_SEARCH_NAME
-from sentry.models import SavedSearch
+from sentry.models import SavedSearch, SortOptions
 from sentry.models.search_common import SearchType
 from sentry.testutils import APITestCase
 
@@ -24,32 +24,41 @@ class CreateOrganizationPinnedSearchTest(APITestCase):
         self.login_as(self.member)
         query = "test"
         search_type = SearchType.ISSUE.value
-        self.get_valid_response(type=search_type, query=query, status_code=201)
+        self.get_valid_response(
+            type=search_type, query=query, sort=SortOptions.DATE, status_code=201
+        )
         assert SavedSearch.objects.filter(
             organization=self.organization,
             name=PINNED_SEARCH_NAME,
             owner=self.member,
             type=search_type,
             query=query,
+            sort=SortOptions.DATE,
         ).exists()
 
         query = "test_2"
-        self.get_valid_response(type=search_type, query=query, status_code=201)
+        self.get_valid_response(
+            type=search_type, query=query, sort=SortOptions.DATE, status_code=201
+        )
         assert SavedSearch.objects.filter(
             organization=self.organization,
             name=PINNED_SEARCH_NAME,
             owner=self.member,
             type=search_type,
             query=query,
+            sort=SortOptions.DATE,
         ).exists()
 
-        self.get_valid_response(type=SearchType.EVENT.value, query=query, status_code=201)
+        self.get_valid_response(
+            type=SearchType.EVENT.value, query=query, sort=SortOptions.DATE, status_code=201
+        )
         assert SavedSearch.objects.filter(
             organization=self.organization,
             name=PINNED_SEARCH_NAME,
             owner=self.member,
             type=search_type,
             query=query,
+            sort=SortOptions.DATE,
         ).exists()
         assert SavedSearch.objects.filter(
             organization=self.organization,
@@ -60,13 +69,16 @@ class CreateOrganizationPinnedSearchTest(APITestCase):
         ).exists()
 
         self.login_as(self.user)
-        self.get_valid_response(type=search_type, query=query, status_code=201)
+        self.get_valid_response(
+            type=search_type, query=query, sort=SortOptions.DATE, status_code=201
+        )
         assert SavedSearch.objects.filter(
             organization=self.organization,
             name=PINNED_SEARCH_NAME,
             owner=self.member,
             type=search_type,
             query=query,
+            sort=SortOptions.DATE,
         ).exists()
         assert SavedSearch.objects.filter(
             organization=self.organization,
@@ -74,6 +86,7 @@ class CreateOrganizationPinnedSearchTest(APITestCase):
             owner=self.user,
             type=search_type,
             query=query,
+            sort=SortOptions.DATE,
         ).exists()
 
     def test_pin_org_search(self):
@@ -89,7 +102,11 @@ class CreateOrganizationPinnedSearchTest(APITestCase):
 
     def test_pin_global_search(self):
         global_search = SavedSearch.objects.create(
-            name="Global Query", query="global query", is_global=True, date_added=timezone.now()
+            name="Global Query",
+            query="global query",
+            is_global=True,
+            date_added=timezone.now(),
+            sort=SortOptions.DATE,
         )
         self.login_as(self.user)
         resp = self.get_valid_response(
@@ -103,6 +120,28 @@ class CreateOrganizationPinnedSearchTest(APITestCase):
         resp = self.get_response(type=55, query="test", status_code=201)
         assert resp.status_code == 400
         assert "not a valid SearchType" in resp.data["type"][0]
+
+    def test_pin_existing_search_with_different_sort(self):
+        query = "test"
+        saved_search = SavedSearch.objects.create(
+            name=query,
+            query=query,
+            date_added=timezone.now(),
+            type=SearchType.ISSUE.value,
+            sort=SortOptions.FREQ,
+            organization=self.organization,
+            owner=self.member,
+        )
+        self.login_as(self.member)
+        resp = self.get_valid_response(
+            type=saved_search.type,
+            query=saved_search.query,
+            sort=SortOptions.DATE,
+            status_code=201,
+        )
+        assert resp.data["isPinned"]
+        assert resp.data["id"] == str(saved_search.id)
+        assert resp.data["sort"] == SortOptions.FREQ
 
 
 class DeleteOrganizationPinnedSearchTest(APITestCase):

@@ -4,7 +4,7 @@ from django.db.models import Q
 
 from sentry.api.bases.organization import OrganizationEndpoint, OrganizationPinnedSearchPermission
 from sentry.api.serializers import serialize
-from sentry.models import SavedSearch
+from sentry.models import SavedSearch, SortOptions
 from sentry.models.search_common import SearchType
 
 
@@ -14,6 +14,9 @@ PINNED_SEARCH_NAME = "My Pinned Search"
 class OrganizationSearchSerializer(serializers.Serializer):
     type = serializers.IntegerField(required=True)
     query = serializers.CharField(required=True)
+    sort = serializers.ChoiceField(
+        choices=SortOptions.as_choices(), default=SortOptions.DATE, required=False
+    )
 
     def validate_type(self, value):
         try:
@@ -31,13 +34,18 @@ class OrganizationPinnedSearchEndpoint(OrganizationEndpoint):
 
         if serializer.is_valid():
             result = serializer.validated_data
-            SavedSearch.objects.create_or_update(
+            saved_search, created = SavedSearch.objects.create_or_update(
                 organization=organization,
                 name=PINNED_SEARCH_NAME,
                 owner=request.user,
                 type=result["type"],
                 values={"query": result["query"]},
             )
+            # Update sort when creating a new saved search, otherwise keep existing sort.
+            if created:
+                saved_search.sort = result["sort"]
+                saved_search.save()
+
             pinned_search = SavedSearch.objects.get(
                 organization=organization, owner=request.user, type=result["type"]
             )

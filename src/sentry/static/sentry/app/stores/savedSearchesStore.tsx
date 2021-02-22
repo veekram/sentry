@@ -16,6 +16,7 @@ type SavedSearchesStoreInterface = {
   getFilteredSearches: (type: SavedSearchType, id?: string) => SavedSearch[];
   updateExistingSearch: (id: string, changes: Partial<SavedSearch>) => SavedSearch;
   findByQuery: (query: string) => SavedSearch | undefined;
+  onPinSearch: (type: SavedSearchType, query: string, sort: string) => void;
 };
 
 const savedSearchesStoreConfig: Reflux.StoreDefinition & SavedSearchesStoreInterface = {
@@ -174,24 +175,25 @@ const savedSearchesStoreConfig: Reflux.StoreDefinition & SavedSearchesStoreInter
     this.trigger(this.state);
   },
 
-  onPinSearch(type, query) {
+  onPinSearch(type, query, sort) {
     const existingSearch = this.findByQuery(query);
 
     if (existingSearch) {
       this.updateExistingSearch(existingSearch.id, {isPinned: true});
     }
 
-    const newPinnedSearch =
-      (!existingSearch && [
-        {
-          id: null,
-          name: 'My Pinned Search',
-          type,
-          query,
-          isPinned: true,
-        },
-      ]) ||
-      [];
+    const newPinnedSearch = !existingSearch
+      ? [
+          {
+            id: null,
+            name: 'My Pinned Search',
+            type,
+            query,
+            sort,
+            isPinned: true,
+          },
+        ]
+      : [];
 
     this.state = {
       ...this.state,

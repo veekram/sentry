@@ -226,7 +226,6 @@ type State = {
    * The current search query in the input
    */
   query: string;
-  sort?: string;
   /**
    * The query in the input since we last updated our autocomplete list.
    */
@@ -950,7 +949,8 @@ class SmartSearchBar extends React.Component<Props, State> {
       api,
       organization.slug,
       savedSearchType,
-      removeSpace(this.state.query)
+      removeSpace(this.state.query),
+      this.props.sort!
     );
 
     if (!resp || !resp.id) {
