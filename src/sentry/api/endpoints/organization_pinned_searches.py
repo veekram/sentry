@@ -34,17 +34,13 @@ class OrganizationPinnedSearchEndpoint(OrganizationEndpoint):
 
         if serializer.is_valid():
             result = serializer.validated_data
-            saved_search, created = SavedSearch.objects.create_or_update(
+            SavedSearch.objects.create_or_update(
                 organization=organization,
                 name=PINNED_SEARCH_NAME,
                 owner=request.user,
                 type=result["type"],
-                values={"query": result["query"]},
+                values={"query": result["query"], "sort": result["sort"]},
             )
-            # Update sort when creating a new saved search, otherwise keep existing sort.
-            if created:
-                saved_search.sort = result["sort"]
-                saved_search.save()
 
             pinned_search = SavedSearch.objects.get(
                 organization=organization, owner=request.user, type=result["type"]
@@ -56,6 +52,7 @@ class OrganizationPinnedSearchEndpoint(OrganizationEndpoint):
                     Q(organization=organization, owner__isnull=True) | Q(is_global=True),
                     type=result["type"],
                     query=result["query"],
+                    sort=result["sort"],
                 )[:1].get()
             except SavedSearch.DoesNotExist:
                 pass

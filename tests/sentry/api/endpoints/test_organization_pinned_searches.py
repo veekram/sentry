@@ -2,7 +2,7 @@ from django.utils import timezone
 from exam import fixture
 
 from sentry.api.endpoints.organization_pinned_searches import PINNED_SEARCH_NAME
-from sentry.models import SavedSearch, SortOptions
+from sentry.models.savedsearch import SavedSearch, SortOptions
 from sentry.models.search_common import SearchType
 from sentry.testutils import APITestCase
 
@@ -91,11 +91,15 @@ class CreateOrganizationPinnedSearchTest(APITestCase):
 
     def test_pin_org_search(self):
         org_search = SavedSearch.objects.create(
-            organization=self.organization, name="foo", query="some test", date_added=timezone.now()
+            organization=self.organization,
+            name="foo",
+            query="some test",
+            date_added=timezone.now(),
+            sort=SortOptions.FREQ,
         )
         self.login_as(self.user)
         resp = self.get_valid_response(
-            type=org_search.type, query=org_search.query, status_code=201
+            type=org_search.type, query=org_search.query, sort=SortOptions.FREQ, status_code=201
         )
         assert resp.data["isPinned"]
         assert resp.data["id"] == str(org_search.id)
@@ -130,7 +134,6 @@ class CreateOrganizationPinnedSearchTest(APITestCase):
             type=SearchType.ISSUE.value,
             sort=SortOptions.FREQ,
             organization=self.organization,
-            owner=self.member,
         )
         self.login_as(self.member)
         resp = self.get_valid_response(
@@ -140,8 +143,8 @@ class CreateOrganizationPinnedSearchTest(APITestCase):
             status_code=201,
         )
         assert resp.data["isPinned"]
-        assert resp.data["id"] == str(saved_search.id)
-        assert resp.data["sort"] == SortOptions.FREQ
+        assert resp.data["id"] != str(saved_search.id)
+        assert resp.data["sort"] == SortOptions.DATE
 
 
 class DeleteOrganizationPinnedSearchTest(APITestCase):
