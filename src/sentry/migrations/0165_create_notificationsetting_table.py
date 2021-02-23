@@ -29,30 +29,119 @@ class Migration(migrations.Migration):
     # transaction.
     atomic = True
 
-
     dependencies = [
-        ('sentry', '0164_add_protect_on_delete_codeowners'),
+        ("sentry", "0164_add_protect_on_delete_codeowners"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='NotificationSetting',
+            name="NotificationSetting",
             fields=[
-                ('id', sentry.db.models.fields.bounded.BoundedBigAutoField(primary_key=True, serialize=False)),
-                ('provider', models.CharField(max_length=64)),
-                ('type', sentry.db.models.fields.bounded.BoundedPositiveIntegerField(choices=[(sentry.models.notificationsetting.NotificationSettingTypes(0), 'default'), (sentry.models.notificationsetting.NotificationSettingTypes(10), 'deploy'), (sentry.models.notificationsetting.NotificationSettingTypes(20), 'issue'), (sentry.models.notificationsetting.NotificationSettingTypes(30), 'workflow')])),
-                ('value', sentry.db.models.fields.bounded.BoundedPositiveIntegerField(choices=[(sentry.models.notificationsetting.NotificationSettingOptionValues(0), 'default'), (sentry.models.notificationsetting.NotificationSettingOptionValues(10), 'off'), (sentry.models.notificationsetting.NotificationSettingOptionValues(20), 'on'), (sentry.models.notificationsetting.NotificationSettingOptionValues(30), 'subscribe_only'), (sentry.models.notificationsetting.NotificationSettingOptionValues(40), 'commited_only')])),
-                ('organization', sentry.db.models.fields.foreignkey.FlexibleForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='sentry.Organization')),
-                ('project', sentry.db.models.fields.foreignkey.FlexibleForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='sentry.Project')),
-                ('team', sentry.db.models.fields.foreignkey.FlexibleForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='sentry.Team')),
-                ('user', sentry.db.models.fields.foreignkey.FlexibleForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    sentry.db.models.fields.bounded.BoundedBigAutoField(
+                        primary_key=True, serialize=False
+                    ),
+                ),
+                ("provider", models.CharField(max_length=64)),
+                (
+                    "type",
+                    sentry.db.models.fields.bounded.BoundedPositiveIntegerField(
+                        choices=[
+                            (
+                                sentry.models.notificationsetting.NotificationSettingTypes(0),
+                                "default",
+                            ),
+                            (
+                                sentry.models.notificationsetting.NotificationSettingTypes(10),
+                                "deploy",
+                            ),
+                            (
+                                sentry.models.notificationsetting.NotificationSettingTypes(20),
+                                "issue",
+                            ),
+                            (
+                                sentry.models.notificationsetting.NotificationSettingTypes(30),
+                                "workflow",
+                            ),
+                        ]
+                    ),
+                ),
+                (
+                    "value",
+                    sentry.db.models.fields.bounded.BoundedPositiveIntegerField(
+                        choices=[
+                            (
+                                sentry.models.notificationsetting.NotificationSettingOptionValues(
+                                    0
+                                ),
+                                "default",
+                            ),
+                            (
+                                sentry.models.notificationsetting.NotificationSettingOptionValues(
+                                    10
+                                ),
+                                "off",
+                            ),
+                            (
+                                sentry.models.notificationsetting.NotificationSettingOptionValues(
+                                    20
+                                ),
+                                "on",
+                            ),
+                            (
+                                sentry.models.notificationsetting.NotificationSettingOptionValues(
+                                    30
+                                ),
+                                "subscribe_only",
+                            ),
+                            (
+                                sentry.models.notificationsetting.NotificationSettingOptionValues(
+                                    40
+                                ),
+                                "commited_only",
+                            ),
+                        ]
+                    ),
+                ),
+                (
+                    "organization",
+                    sentry.db.models.fields.foreignkey.FlexibleForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="sentry.Organization",
+                    ),
+                ),
+                (
+                    "project",
+                    sentry.db.models.fields.foreignkey.FlexibleForeignKey(
+                        null=True, on_delete=django.db.models.deletion.CASCADE, to="sentry.Project"
+                    ),
+                ),
+                (
+                    "team",
+                    sentry.db.models.fields.foreignkey.FlexibleForeignKey(
+                        null=True, on_delete=django.db.models.deletion.CASCADE, to="sentry.Team"
+                    ),
+                ),
+                (
+                    "user",
+                    sentry.db.models.fields.foreignkey.FlexibleForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'db_table': 'sentry_notificationsetting',
+                "db_table": "sentry_notificationsetting",
             },
         ),
         migrations.AlterUniqueTogether(
-            name='notificationsetting',
-            unique_together=set([('organization', 'project', 'user', 'type', 'provider'), ('organization', 'project', 'team', 'type', 'provider')]),
+            name="notificationsetting",
+            unique_together={
+                    ("organization", "project", "user", "type", "provider"),
+                    ("organization", "project", "team", "type", "provider"),
+            },
         ),
     ]
