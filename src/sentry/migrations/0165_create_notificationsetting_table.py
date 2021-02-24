@@ -140,8 +140,8 @@ class Migration(migrations.Migration):
         migrations.AlterUniqueTogether(
             name="notificationsetting",
             unique_together={
-                    ("organization", "project", "user", "type", "provider"),
-                    ("organization", "project", "team", "type", "provider"),
+                ("organization", "project", "user", "type", "provider"),
+                ("organization", "project", "team", "type", "provider"),
             },
         ),
     ]
